@@ -260,11 +260,7 @@ namespace Visao
             {
                 Message.MensagemAlerta("O nome do projeto não está válido!");
                 this.tbx_nomeProjeto.Focus();
-            }
-            else if (string.IsNullOrEmpty(this.tbx_repositorio.Text))
-            {
-                Message.MensagemAlerta("O repositório não pode estar vazio!");
-                this.tbx_repositorio.Focus();
+                retorno = false;
             }
             return retorno;
         }

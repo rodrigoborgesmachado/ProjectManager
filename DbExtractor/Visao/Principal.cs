@@ -195,7 +195,7 @@ namespace Visao
                 string usuario = this.tbx_usuarioSQLServer.Text;
                 string senha = this.tbx_senhaSqlServer.Text;
 
-                string connection = "Data Source=" + servidor + ";User Id=" + usuario + ";Password=" + senha;
+                string connection = $"Data Source={servidor};Initial Catalog={database};Persist Security Info=True;User ID={usuario};Password={senha}; Min Pool Size=5;Max Pool Size=250; Connection Timeout=120";
 
                 if (DataBase.Connection.OpenConection(connection, Util.Enumerator.BancoDados.SQL_SERVER))
                 {

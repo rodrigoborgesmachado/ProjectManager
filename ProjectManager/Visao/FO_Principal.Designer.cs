@@ -306,7 +306,7 @@
             this.utilToolStripMenuItem});
             this.mst_opcoes.Location = new System.Drawing.Point(0, 0);
             this.mst_opcoes.Name = "mst_opcoes";
-            this.mst_opcoes.Size = new System.Drawing.Size(246, 30);
+            this.mst_opcoes.Size = new System.Drawing.Size(246, 28);
             this.mst_opcoes.TabIndex = 1;
             this.mst_opcoes.Text = "menuStrip1";
             // 
@@ -321,7 +321,7 @@
             this.tsp_arquivosUtil,
             this.tsp_arquivosModel});
             this.tsm_opcoes.Name = "tsm_opcoes";
-            this.tsm_opcoes.Size = new System.Drawing.Size(73, 26);
+            this.tsm_opcoes.Size = new System.Drawing.Size(73, 24);
             this.tsm_opcoes.Text = "Opções";
             // 
             // tsp_tipLog
@@ -420,7 +420,7 @@
             this.utilToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gerarHashToolStripMenuItem});
             this.utilToolStripMenuItem.Name = "utilToolStripMenuItem";
-            this.utilToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.utilToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.utilToolStripMenuItem.Text = "Util";
             // 
             // gerarHashToolStripMenuItem
@@ -476,7 +476,7 @@
             this.lbl_empresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_empresa.AutoSize = true;
             this.lbl_empresa.Font = new System.Drawing.Font("Times New Roman", 9F);
-            this.lbl_empresa.Location = new System.Drawing.Point(687, 4);
+            this.lbl_empresa.Location = new System.Drawing.Point(648, 4);
             this.lbl_empresa.Name = "lbl_empresa";
             this.lbl_empresa.Size = new System.Drawing.Size(103, 17);
             this.lbl_empresa.TabIndex = 1;
@@ -507,8 +507,9 @@
             this.MinimumSize = new System.Drawing.Size(1126, 644);
             this.Name = "FO_Principal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "DER Creator";
+            this.Text = "Project Manager";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.FO_Principal_Load);
             this.pan_left.ResumeLayout(false);
             this.pan_projetos.ResumeLayout(false);
             this.pan_opções.ResumeLayout(false);

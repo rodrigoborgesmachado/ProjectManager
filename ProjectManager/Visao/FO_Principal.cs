@@ -46,6 +46,16 @@ namespace Visao
         #region Eventos
 
         /// <summary>
+        /// Evento lançado quando a tela abre
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FO_Principal_Load(object sender, EventArgs e)
+        {
+            this.CarregaTreeView();
+        }
+
+        /// <summary>
         /// Evento lançado no clique do botão atualizar
         /// </summary>
         /// <param name="sender"></param>
@@ -971,7 +981,6 @@ namespace Visao
             this.InitializeComponent();
             this.lbl_valorVersao.Text = Regras.Versao.Version.DAO.Dercreator;
             this.CarregaMenuOpcoes();
-            this.CarregaTreeView();
         }
 
         /// <summary>
@@ -2127,5 +2136,6 @@ namespace Visao
 
 
         #endregion Métodos
+
     }
 }
