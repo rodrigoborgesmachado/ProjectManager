@@ -393,6 +393,8 @@ namespace Visao
 
                 this.CarregaObjeto();
 
+                this.cmb_datatype.SelectedValue = this.campoCorrente.DAO.TipoCampo.Codigo;
+
                 this.HabilitaEdicao(true);
             }
         }

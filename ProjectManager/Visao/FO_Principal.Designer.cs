@@ -509,6 +509,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Project Manager";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FO_Principal_FormClosing);
             this.Load += new System.EventHandler(this.FO_Principal_Load);
             this.pan_left.ResumeLayout(false);
             this.pan_projetos.ResumeLayout(false);

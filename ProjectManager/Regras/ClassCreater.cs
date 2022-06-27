@@ -417,11 +417,15 @@ namespace Regras
                     break;
                 case Enumerator.DataType.INT:
                     if (campo.ValueDefault == null)
+                    {
                         retorno = 0.ToString();
                         break;
+                    }
                     if (string.IsNullOrEmpty(campo.ValueDefault.ToString()))
+                    {
                         retorno= 0.ToString();
                         break;
+                    }
                     retorno = int.Parse(campo.ValueDefault.ToString()).ToString();
                     break;
                 case Enumerator.DataType.DECIMAL:

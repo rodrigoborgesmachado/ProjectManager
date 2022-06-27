@@ -73,6 +73,7 @@
     <Compile Include="DAO\MDN_Campo.cs" />
     <Compile Include="DAO\MDN_Model.cs" />
     <Compile Include="DAO\MDN_Table.cs" />
+    <Compile Include="DAO\MD_Ambientes.cs" />
     <Compile Include="DAO\MD_Campos.cs" />
     <Compile Include="DAO\MD_Modulos.cs" />
     <Compile Include="DAO\MD_Parametros.cs" />

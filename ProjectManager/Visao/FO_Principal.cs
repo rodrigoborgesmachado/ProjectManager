@@ -56,6 +56,23 @@ namespace Visao
         }
 
         /// <summary>
+        /// Evento lançado quando tela está em fechamento
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FO_Principal_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Projeto().table.CreateCommandSQLTable() + " WHERE STATUS = '1'");
+            while (reader.Read())
+            {
+                DAO.MD_Projeto projeto = new DAO.MD_Projeto(int.Parse(reader["CODIGO"].ToString()));
+                projeto.StatusProjeto = Status.DESATIVADO;
+                projeto.Update();
+            }
+            reader.Close();
+        }
+
+        /// <summary>
         /// Evento lançado no clique do botão atualizar
         /// </summary>
         /// <param name="sender"></param>
@@ -355,6 +372,34 @@ namespace Visao
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void item_gerarRelatorio_ambiente_selected_Click(object sender, EventArgs e)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.item_gerarRelatorio_ambiente_selected_Click()", Util.Global.TipoLog.DETALHADO);
+
+            MenuItem item = (MenuItem)sender;
+            string codigo_modulo = item.Tag.ToString().Split(':')[0];
+            string codigoprojeto = item.Tag.ToString().Split(':')[1];
+
+            Model.MD_Projeto proj = new Model.MD_Projeto(int.Parse(codigoprojeto));
+            Model.MD_Modulos mod = new Model.MD_Modulos(int.Parse(codigo_modulo), proj.DAO.Codigo);
+
+            string mensagem = string.Empty;
+            if (this.GerarRelatorioModulo(mod))
+            {
+                Visao.Message.MensagemSucesso("Relatório gerado com sucesso no diretório: " + Util.Global.app_rel_directory + "!");
+            }
+            else
+            {
+                Visao.Message.MensagemErro("Houve erros ao gerar o relatório!");
+            }
+
+        }
+
+        /// <summary>
+        /// Evento lançado na seleção do botão direito no tree view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void item_gerarRelatorioTodosModulo_selected_Click(object sender, EventArgs e)
         {
             Util.CL_Files.WriteOnTheLog("FO_Principal.item_gerarRelatorioTodosModulo_selected_Click()", Util.Global.TipoLog.DETALHADO);
@@ -380,6 +425,28 @@ namespace Visao
         private void item_gerarRelatorioTodosTestes_selected_Click(object sender, EventArgs e)
         {
             Util.CL_Files.WriteOnTheLog("FO_Principal.item_gerarRelatorioTodosTestes_selected_Click()", Util.Global.TipoLog.DETALHADO);
+
+            MenuItem item = (MenuItem)sender;
+            string codigoprojeto = item.Tag.ToString();
+
+            Model.MD_Projeto proj = new Model.MD_Projeto(int.Parse(codigoprojeto));
+
+            string mensagem = string.Empty;
+            if (!this.GerarRelatorioTeste(proj))
+            {
+                Message.MensagemAlerta("Houve erros ao gerar o relatório!");
+            }
+
+        }
+
+        /// <summary>
+        /// Evento lançado na seleção do botão direito no tree view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void item_gerarRelatorioTodos_ambientes_selected_Click(object sender, EventArgs e)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.item_gerarRelatorioTodos_ambientes_selected_Click()", Util.Global.TipoLog.DETALHADO);
 
             MenuItem item = (MenuItem)sender;
             string codigoprojeto = item.Tag.ToString();
@@ -441,6 +508,22 @@ namespace Visao
 
             Model.MD_Teste teste = new Model.MD_Teste(-1, new Model.MD_Projeto(-1));
             this.AbrirCadastroTeste(teste, new Model.MD_Projeto(int.Parse(codigo_projeto)), Tarefa.INCLUINDO);
+        }
+
+        /// <summary>
+        /// Evento lançado na seleção do botão incluir módulo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void item_adiciona_ambiente_tabela_selected_Click(object sender, EventArgs e)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.item_adiciona_ambiente_tabela_selected_Click()", Util.Global.TipoLog.DETALHADO);
+
+            MenuItem item = (MenuItem)sender;
+            string codigo_projeto = item.Tag.ToString();
+
+            Model.MD_Ambientes ambiente = new Model.MD_Ambientes(DataBase.Connection.GetIncrement(new DAO.MD_Ambientes().table.Table_Name));
+            this.AbrirCadastroAmbiente(ambiente, new Model.MD_Projeto(int.Parse(codigo_projeto)), Tarefa.INCLUINDO);
         }
 
         /// <summary>
@@ -610,6 +693,25 @@ namespace Visao
         }
 
         /// <summary>
+        /// Evento lançado no cliqeu da opção editar do ambiente
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void item_editar_ambiente_selected_Click(object sender, EventArgs e)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.item_editar_ambiente_selected_Click()", Util.Global.TipoLog.DETALHADO);
+
+            if (lockchange)
+                return;
+
+            MenuItem item = (MenuItem)sender;
+            string codigo = item.Tag.ToString().Split(':')[1];
+            Model.MD_Ambientes mod = new Model.MD_Ambientes(int.Parse(item.Tag.ToString().Split(':')[0]));
+
+            this.AbrirCadastroAmbiente(mod, new Model.MD_Projeto(int.Parse(codigo)), Tarefa.EDITANDO);
+        }
+
+        /// <summary>
         /// Evento lançado no cliqeu da opção excluir da tabela
         /// </summary>
         /// <param name="sender"></param>
@@ -701,6 +803,36 @@ namespace Visao
                     Message.MensagemSucesso("Excluído com sucesso!");
                     this.CarregaTreeViewAutomaticamente();
                     this.FecharTela(Telas.CADASTRO_MODULO);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Evento lançado no cliqeu da opção excluir da tabela
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void item_excluir_ambiente_selected_Click(object sender, EventArgs e)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.item_excluir_ambiente_selected_Click()", Util.Global.TipoLog.DETALHADO);
+
+            if (lockchange)
+                return;
+
+            MenuItem item = (MenuItem)sender;
+            Model.MD_Ambientes ambiente = new Model.MD_Ambientes(int.Parse(item.Tag.ToString().Split(':')[0]));
+
+            if (Message.MensagemConfirmaçãoYesNo($"Deseja excluir o ambiente {ambiente.DAO.Nome}?") == DialogResult.Yes)
+            {
+                if (ambiente.DAO.Delete())
+                {
+                    Message.MensagemSucesso("Excluído com sucesso!");
+                    this.CarregaTreeViewAutomaticamente();
+                    this.FecharTela(Telas.CADASTRO_MODULO);
+                }
+                else
+                {
+                    Message.MensagemErro("Erro ao excluir");
                 }
             }
         }
@@ -1096,6 +1228,7 @@ namespace Visao
                     this.CarregaTabelas(project, ref node, ref aguarde);
                     this.CarregaModulos(project, ref node, ref aguarde);
                     this.CarregaTestes(project, ref node, ref aguarde);
+                    this.CarregaAmbientes(project, ref node, ref aguarde);
                 }
 
                 projetos.Nodes.Add(node);
@@ -1255,10 +1388,57 @@ namespace Visao
             MenuItem incluirTeste = new MenuItem("Incluir Teste", item_adicionaTeste_tabela_selected_Click);
             incluirTeste.Tag = project.DAO.Codigo;
 
-            MenuItem RelatorioTeste = new MenuItem("Gerar Relatório dos Testes", item_gerarRelatorioTodosTestes_selected_Click);
-            RelatorioTeste.Tag = project.DAO.Codigo;
+            MenuItem relatorioAmbiente = new MenuItem("Gerar Relatório dos Testes", item_gerarRelatorioTodosTestes_selected_Click);
+            relatorioAmbiente.Tag = project.DAO.Codigo;
 
             menu.MenuItems.Add(incluirTeste);
+            menu.MenuItems.Add(relatorioAmbiente);
+
+            nodeTestes.ContextMenu = menu;
+
+            nodeTestes.Expand();
+            node.Nodes.Add(nodeTestes);
+            reader.Close();
+        }
+
+        /// <summary>
+        /// Método que preenche os ambientes
+        /// </summary>
+        /// <param name="project">Projeto dos relatórios</param>
+        /// <param name="node">NOde do tree view para receber os relatórios</param>
+        /// <param name="aguarde"></param>
+        public void CarregaAmbientes(Model.MD_Projeto project, ref TreeNode node, ref BarraDeCarregamento aguarde)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.CarregaTestes()", Util.Global.TipoLog.DETALHADO);
+
+            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Ambientes().table.CreateCommandSQLTable() + " WHERE CODIGOPROJETO = " + project.DAO.Codigo);
+
+            TreeNode nodeTestes = new TreeNode("Ambientes");
+            nodeTestes.Tag = project.DAO.Codigo;
+            while (reader.Read())
+            {
+                aguarde.AvancaBarra(1);
+                Model.MD_Ambientes ambiente = new Model.MD_Ambientes(int.Parse(reader["CODIGO"].ToString()));
+
+                TreeNode nodeRelatorio = new TreeNode(ambiente.DAO.Nome);
+                nodeRelatorio.Tag = "ambientes:" + ambiente.DAO.Codigo + ":" + project.DAO.Codigo;
+                nodeRelatorio.ImageIndex = 6;
+                nodeRelatorio.SelectedImageIndex = 6;
+
+                this.IncluiMenuAmbiente(ref nodeRelatorio, ambiente, project);
+
+                nodeTestes.Nodes.Add(nodeRelatorio);
+            }
+
+            ContextMenu menu = new ContextMenu();
+
+            MenuItem incluirAmbiente = new MenuItem("Incluir Ambiente", item_adiciona_ambiente_tabela_selected_Click);
+            incluirAmbiente.Tag = project.DAO.Codigo;
+
+            MenuItem RelatorioTeste = new MenuItem("Gerar Relatório dos Ambientes", item_gerarRelatorioTodos_ambientes_selected_Click);
+            RelatorioTeste.Tag = project.DAO.Codigo;
+
+            menu.MenuItems.Add(incluirAmbiente);
             menu.MenuItems.Add(RelatorioTeste);
 
             nodeTestes.ContextMenu = menu;
@@ -1386,6 +1566,31 @@ namespace Visao
             menuCenario.MenuItems.Add(item_editar_relatorio);
             menuCenario.MenuItems.Add(item_excluir_relatorio);
             menuCenario.MenuItems.Add(item_gerarrelatorio);
+            nodeTabela.ContextMenu = menuCenario;
+        }
+
+        /// <summary>
+        /// Método que adiciona o menu à tabela
+        /// </summary>
+        /// <param name="nodeTabela">Node referente à tabela</param>
+        private void IncluiMenuAmbiente(ref TreeNode nodeTabela, Model.MD_Ambientes ambiente, Model.MD_Projeto projeto)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.IncluiMenuTeste()", Util.Global.TipoLog.DETALHADO);
+
+            MenuItem item_editar_ambiente = new MenuItem("Editar", item_editar_ambiente_selected_Click);
+            item_editar_ambiente.Tag = ambiente.DAO.Codigo + ":" + projeto.DAO.Codigo;
+
+            MenuItem item_excluir_ambiente = new MenuItem("Excluir", item_excluir_ambiente_selected_Click);
+            item_excluir_ambiente.Tag = ambiente.DAO.Codigo + ":" + projeto.DAO.Codigo;
+
+            MenuItem item_gerar_ambiente = new MenuItem("Gerar Relatorio", item_gerarRelatorio_ambiente_selected_Click);
+            item_gerar_ambiente.Tag = ambiente.DAO.Codigo + ":" + projeto.DAO.Codigo;
+
+            ContextMenu menuCenario = new ContextMenu();
+
+            menuCenario.MenuItems.Add(item_editar_ambiente);
+            menuCenario.MenuItems.Add(item_excluir_ambiente);
+            menuCenario.MenuItems.Add(item_gerar_ambiente);
             nodeTabela.ContextMenu = menuCenario;
         }
 
@@ -1617,6 +1822,18 @@ namespace Visao
         /// </summary>
         /// <param name="campo">Classe de instância do campo</param>
         /// <param name="tarefa"></param>
+        public void AbrirCadastroAmbiente(Model.MD_Ambientes ambiente, Model.MD_Projeto projeto, Tarefa tarefa)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.AbrirCadastroAmbiente()", Util.Global.TipoLog.DETALHADO);
+
+            this.AbreJanela(new Visao.UC_CadastroAmbiente(ambiente, projeto, tarefa, this), "Cadastro de Ambiente", Telas.CADASTRO_AMBIENTE);
+        }
+
+        /// <summary>
+        /// Método que abre a janela de cadastro de campo
+        /// </summary>
+        /// <param name="campo">Classe de instância do campo</param>
+        /// <param name="tarefa"></param>
         public void AbrirCadastroModulo(Model.MD_Modulos modulo, Model.MD_Projeto projeto, Tarefa tarefa)
         {
             Util.CL_Files.WriteOnTheLog("FO_Principal.AbrirCadastroCampo()", Util.Global.TipoLog.DETALHADO);
@@ -1744,6 +1961,12 @@ namespace Visao
                 int cod = int.Parse(code.Split(':')[2]);
                 this.AbrirCadastroVersao(new Model.MD_Versoes(codVersao, cod), Tarefa.VISUALIZANDO, new Model.MD_Projeto(cod));
             }
+            else if (janela.Equals("ambientes"))
+            {
+                int codAmbiente = int.Parse(code.Split(':')[1]);
+                int cod = int.Parse(code.Split(':')[2]);
+                this.AbrirCadastroAmbiente(new Model.MD_Ambientes(codAmbiente), new Model.MD_Projeto(cod), Tarefa.VISUALIZANDO);
+            }
         }
 
         /// <summary>
@@ -1850,6 +2073,8 @@ namespace Visao
             int totalCampos = 0;
             int totalRelacoes = 0;
             int totalModulos = 0;
+            int totalTestes = 0;
+            int totalAmbientes = 0;
 
             DAO.MD_Projeto projeto = new DAO.MD_Projeto();
             totalProjetos = projeto.QuantidadeTotal();
@@ -1863,10 +2088,16 @@ namespace Visao
             DAO.MD_Relacao relacoes = new DAO.MD_Relacao();
             totalRelacoes = relacoes.QuantidadeTotal();
 
-            DAO.MD_Modulos moduloes = new DAO.MD_Modulos();
-            totalModulos = moduloes.QuantidadeTotal();
+            DAO.MD_Modulos modulos = new DAO.MD_Modulos();
+            totalModulos = modulos.QuantidadeTotal();
 
-            return totalProjetos + totalCampos + totalRelacoes + totalTabelas + totalModulos;
+            DAO.MD_Testes testes = new DAO.MD_Testes();
+            totalTestes = testes.QuantidadeTotal();
+
+            DAO.MD_Ambientes ambientes = new DAO.MD_Ambientes();
+            totalAmbientes = ambientes.QuantidadeTotal();
+
+            return totalProjetos + totalCampos + totalRelacoes + totalTabelas + totalModulos + totalTestes + totalAmbientes;
         }
 
         /// <summary>

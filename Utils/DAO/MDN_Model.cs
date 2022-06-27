@@ -57,17 +57,7 @@ namespace DAO
         /// <returns>Número total</returns>
         public int QuantidadeTotal()
         {
-            int retorno = 0;
-
-            DbDataReader reader = DataBase.Connection.Select(table.CreateCommandSQLTable());
-
-            while (reader.Read())
-            {
-                retorno++;
-            }
-            reader.Close();
-
-            return retorno;
+            return QuantidadeTotal(string.Empty);
         }
 
         /// <summary>

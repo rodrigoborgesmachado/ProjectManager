@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Campo.cs" />
+    <Compile Include="Model\MD_Ambientes.cs" />
     <Compile Include="Model\MD_Campos.cs" />
     <Compile Include="Model\MD_Modulos.cs" />
     <Compile Include="Model\MD_Parametros.cs" />
@@ -181,6 +182,12 @@
     <Compile Include="Visao\UC_CadastroVersao.Designer.cs">
       <DependentUpon>UC_CadastroVersao.cs</DependentUpon>
     </Compile>
+    <Compile Include="Visao\UC_CadstroAmbiente.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Visao\UC_CadstroAmbiente.Designer.cs">
+      <DependentUpon>UC_CadstroAmbiente.cs</DependentUpon>
+    </Compile>
     <Compile Include="Visao\UC_WEB.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -241,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Visao\UC_CadastroVersao.resx">
       <DependentUpon>UC_CadastroVersao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Visao\UC_CadstroAmbiente.resx">
+      <DependentUpon>UC_CadstroAmbiente.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
