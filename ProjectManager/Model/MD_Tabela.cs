@@ -39,6 +39,26 @@ namespace Model
         #region Métodos
 
         /// <summary>
+        /// Método que busca as tabelas associadas a um projeto
+        /// </summary>
+        /// <param name="projeto"></param>
+        /// <returns></returns>
+        public static List<MD_Tabela> GetTabelas(int projeto)
+        {
+            List<MD_Tabela> lista = new List<MD_Tabela>();
+            string sentenca = new DAO.MD_Tabela().table.CreateCommandSQLTable() + " WHERE PROJETO = " + projeto;
+
+            DbDataReader reader = DataBase.Connection.Select(sentenca);
+            while (reader.Read())
+            {
+                lista.Add(new MD_Tabela(int.Parse(reader["CODIGO"].ToString()), projeto));
+            }
+            reader.Close();
+
+            return lista;
+        }
+
+        /// <summary>
         /// Método que retorna uma lista com os campos que pertencem à tabela
         /// </summary>
         /// <returns>Lista com os campos</returns>

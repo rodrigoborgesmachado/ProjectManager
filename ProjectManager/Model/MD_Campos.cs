@@ -39,6 +39,28 @@ namespace Model
         #region Métodos
 
         /// <summary>
+        /// Método que busca os campos referente à tabela
+        /// </summary>
+        /// <param name="tabela"></param>
+        /// <param name="projeto"></param>
+        /// <returns></returns>
+        public static List<MD_Campos> RetornaCamposTabela(int tabela, int projeto)
+        {
+            List<MD_Campos> campos = new List<MD_Campos>();
+
+            string sentenca = new DAO.MD_Campos().table.CreateCommandSQLTable() + " WHERE CODIGOTABELA = " + tabela;
+            DbDataReader reader = DataBase.Connection.Select(sentenca);
+
+            while (reader.Read())
+            {
+                campos.Add(new MD_Campos(int.Parse(reader["CODIGO"].ToString()), tabela, projeto));
+            }
+            reader.Close();
+
+            return campos;
+        }
+
+        /// <summary>
         /// Método que valida se há alguma foreing key associado ao campo
         /// </summary>
         /// <returns>True - há; false - não há</returns>

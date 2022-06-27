@@ -188,6 +188,12 @@
     <Compile Include="Visao\UC_CadstroAmbiente.Designer.cs">
       <DependentUpon>UC_CadstroAmbiente.cs</DependentUpon>
     </Compile>
+    <Compile Include="Visao\UC_Tabelas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Visao\UC_Tabelas.Designer.cs">
+      <DependentUpon>UC_Tabelas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Visao\UC_WEB.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -251,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Visao\UC_CadstroAmbiente.resx">
       <DependentUpon>UC_CadstroAmbiente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Visao\UC_Tabelas.resx">
+      <DependentUpon>UC_Tabelas.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

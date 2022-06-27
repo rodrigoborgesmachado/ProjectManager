@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.Common;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Util.Enumerator;
 using static Util.Global;
@@ -62,14 +56,14 @@ namespace Visao
         /// <param name="e"></param>
         private void FO_Principal_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Projeto().table.CreateCommandSQLTable() + " WHERE STATUS = '1'");
+            /*DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Projeto().table.CreateCommandSQLTable() + " WHERE STATUS = '1'");
             while (reader.Read())
             {
                 DAO.MD_Projeto projeto = new DAO.MD_Projeto(int.Parse(reader["CODIGO"].ToString()));
                 projeto.StatusProjeto = Status.DESATIVADO;
                 projeto.Update();
             }
-            reader.Close();
+            reader.Close();*/
         }
 
         /// <summary>
@@ -1499,11 +1493,10 @@ namespace Visao
         {
             Util.CL_Files.WriteOnTheLog("FO_Principal.CarregaTabelas()", Util.Global.TipoLog.DETALHADO);
 
-            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Tabela().table.CreateCommandSQLTable() + " WHERE PROJETO = " + project.DAO.Codigo + " ORDER BY NOME");
-
             TreeNode nodeTabelas = new TreeNode("Tabelas");
-            nodeTabelas.Tag = string.Empty;
-
+            nodeTabelas.Tag = "TABELA:" + project.DAO.Codigo;
+            /*
+            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Tabela().table.CreateCommandSQLTable() + " WHERE PROJETO = " + project.DAO.Codigo + " ORDER BY NOME");
             while (reader.Read())
             {
                 aguarde.AvancaBarra(1);
@@ -1522,6 +1515,8 @@ namespace Visao
 
                 nodeTabelas.Nodes.Add(nodeTabela);
             }
+            reader.Close();
+            */
 
             MenuItem item_incluirTabela = new MenuItem("Incluir tabela", item_incluirTabela_selected_Click);
             item_incluirTabela.Tag = project.DAO.Codigo;
@@ -1541,7 +1536,6 @@ namespace Visao
 
             nodeTabelas.Expand();
             node.Nodes.Add(nodeTabelas);
-            reader.Close();
         }
 
         /// <summary>
@@ -1806,6 +1800,17 @@ namespace Visao
         }
 
         /// <summary>
+        /// Método que abre janela de cadastro de tabela
+        /// </summary>
+        /// <param name="project"></param>
+        public void AbrirTabela(Model.MD_Projeto projeto)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.AbrirTabela()", Util.Global.TipoLog.DETALHADO);
+
+            this.AbreJanela(new Visao.UC_Tabelas(projeto, this), "Tabelas", Telas.LISTAGEM_TABELAS);
+        }
+
+        /// <summary>
         /// Método que abre a janela de cadastro de campo
         /// </summary>
         /// <param name="campo">Classe de instância do campo</param>
@@ -1908,6 +1913,11 @@ namespace Visao
                 int tab = int.Parse(code.Split(':')[1]);
                 int proj = int.Parse(code.Split(':')[2]);
                 this.AbrirCadastroTabela(new Model.MD_Projeto(proj), Tarefa.VISUALIZANDO, new Model.MD_Tabela(tab, proj));
+            }
+            else if (janela.Equals("TABELA"))
+            {
+                int proj = int.Parse(code.Split(':')[1]);
+                this.AbrirTabela(new Model.MD_Projeto(proj));
             }
             else if (janela.Equals("campos"))
             {
@@ -2069,7 +2079,7 @@ namespace Visao
             Util.CL_Files.WriteOnTheLog("FO_Principal.BuscaTotalItensTreeView()", Util.Global.TipoLog.DETALHADO);
 
             int totalProjetos = 0;
-            int totalTabelas = 0;
+            //int totalTabelas = 0;
             int totalCampos = 0;
             int totalRelacoes = 0;
             int totalModulos = 0;
@@ -2079,8 +2089,8 @@ namespace Visao
             DAO.MD_Projeto projeto = new DAO.MD_Projeto();
             totalProjetos = projeto.QuantidadeTotal();
 
-            DAO.MD_Tabela tabela = new DAO.MD_Tabela();
-            totalTabelas = tabela.QuantidadeTotal();
+            //DAO.MD_Tabela tabela = new DAO.MD_Tabela();
+            //totalTabelas = tabela.QuantidadeTotal();
 
             DAO.MD_Campos campos = new DAO.MD_Campos();
             totalCampos = campos.QuantidadeTotal();
@@ -2097,7 +2107,8 @@ namespace Visao
             DAO.MD_Ambientes ambientes = new DAO.MD_Ambientes();
             totalAmbientes = ambientes.QuantidadeTotal();
 
-            return totalProjetos + totalCampos + totalRelacoes + totalTabelas + totalModulos + totalTestes + totalAmbientes;
+            //return totalProjetos + totalCampos + totalRelacoes + totalTabelas + totalModulos + totalTestes + totalAmbientes;
+            return totalProjetos + totalCampos + totalRelacoes + totalModulos + totalTestes + totalAmbientes;
         }
 
         /// <summary>

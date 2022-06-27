@@ -38,7 +38,8 @@ namespace Util
             LISTAR_TODOS_CHAMADOS = 11,
             CADASTRO_VERSAO = 12,
             CONTROLE_PAGAMENTO = 13,
-            CADASTRO_AMBIENTE = 14
+            CADASTRO_AMBIENTE = 14,
+            LISTAGEM_TABELAS = 15
         }
 
         /// <summary>
