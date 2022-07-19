@@ -78,7 +78,7 @@ namespace ClassCreate.Controller
             builder.AppendLine("            {");
             builder.AppendLine("                return new RetornoItem<$[NOMEENTIDADE]>()");
             builder.AppendLine("                {");
-            builder.AppendLine("                    Objeto = repository.Get(nome),");
+            builder.AppendLine("                    Objeto = repository.Get($[CHAMADABUSCA]),");
             builder.AppendLine("                    Mensagem = \"Busca realizada com sucesso\",");
             builder.AppendLine("                    Sucesso = true");
             builder.AppendLine("                };");
@@ -142,13 +142,13 @@ namespace ClassCreate.Controller
             builder.AppendLine("            }");
             builder.AppendLine("        }");
             builder.AppendLine("");
-            builder.AppendLine("        [HttpDelete]");
+            builder.AppendLine("        [HttpPost]");
             builder.AppendLine("        [Route(\"deleteItem\")]");
             builder.AppendLine("        public RetornoItem<$[NOMEENTIDADE]> DeleteItem($[CHAVEBUSCA])");
             builder.AppendLine("        {");
             builder.AppendLine("            try");
             builder.AppendLine("            {");
-            builder.AppendLine("                bool retorno = repository.Deleta(nome);");
+            builder.AppendLine("                bool retorno = repository.Deleta($[CHAMADABUSCA]);");
             builder.AppendLine("");
             builder.AppendLine("                return new RetornoItem<$[NOMEENTIDADE]>()");
             builder.AppendLine("                {");
@@ -277,6 +277,12 @@ namespace ClassCreate.Controller
                 Valor = this.RetornaNomeVariavel(this.RetornaNomeEntidade())
             });
 
+            retorno.Add(new KeyWords()
+            {
+                Parametro = "$[CHAMADABUSCA]",
+                Valor = this.MontaBuscaParametros()
+            });
+
             return retorno;
         }
 
@@ -309,6 +315,20 @@ namespace ClassCreate.Controller
         private string RetornaChaveBusca()
         {
             string retorno = new DAO.Construtor(this).MontaParametrosConstrutor();
+
+            return retorno;
+        }
+
+        /// <summary>
+        /// Método que monta a busca pelos parâmetros
+        /// </summary>
+        /// <returns></returns>
+        public string MontaBuscaParametros()
+        {
+            string retorno = string.Empty;
+
+            this.Tabela.CamposDaTabela().Where(c => c.DAO.PrimaryKey).ToList().ForEach(campo => retorno += ", " + this.RetornaNomeVariavel(campo.DAO.Nome));
+            retorno = retorno.Count() > 1 ? retorno.Substring(1).Trim() : string.Empty;
 
             return retorno;
         }

@@ -63,19 +63,19 @@ namespace ClassCreate.DAO
                     switch (campo.TipoNucleo())
                     {
                         case Util.Enumerator.DataType.CHAR:
-                            builder.Append($"$\"'this.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)}'\"");
+                            builder.Append("$\"'{this." + this.daoClass.RetornaNomePropriedade(campo.DAO.Nome) + "}'\"");
                             break;
                         case Util.Enumerator.DataType.STRING:
-                            builder.Append($"$\"'this.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)}'\"");
+                            builder.Append("$\"'{this." + this.daoClass.RetornaNomePropriedade(campo.DAO.Nome) + "}'\"");
                             break;
                         case Util.Enumerator.DataType.INT:
-                            builder.Append($"$\"this.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)}\"");
+                            builder.Append("$\"{this." + this.daoClass.RetornaNomePropriedade(campo.DAO.Nome) + "}\"");
                             break;
                         case Util.Enumerator.DataType.DATE:
                             builder.Append($"$\"'\" + this.MontaStringDateTimeFromDateTime(this.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)}) + \"'\" ");
                             break;
                         case Util.Enumerator.DataType.DECIMAL:
-                            builder.Append($"$\"this.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)}\" ");
+                            builder.Append("$\"{this." + this.daoClass.RetornaNomePropriedade(campo.DAO.Nome) + "}\"");
                             break;
                     }
                 }

@@ -27,6 +27,7 @@ namespace ClassCreate.Repository
 
             builder.AppendLine("using DevtoolsAPI.Entity.Entidades.$[NAMESPACE];");
             builder.AppendLine("using DevtoolsAPI.InterfaceRepository;");
+            builder.AppendLine("using System;");
             builder.AppendLine("using System.Collections.Generic;");
             builder.AppendLine("using System.Configuration;");
             builder.AppendLine("");
@@ -47,7 +48,11 @@ namespace ClassCreate.Repository
             builder.AppendLine("                Utils.DataBase.Connection.OpenConection(ConfigurationManager.ConnectionStrings[\"LocalSqlServer\"].ConnectionString);");
             builder.AppendLine("                retorno = Entity.Models.$[NAMESPACE].$[CLASSEMODEL].Atualiza($[ENTIDADEVARIAVEL]) ? $[ENTIDADEVARIAVEL] : null;");
             builder.AppendLine("            }");
-            builder.AppendLine("            catch");
+            builder.AppendLine("            catch (Exception ex)");
+            builder.AppendLine("            {");
+            builder.AppendLine("                Utils.Util.CL_Files.WriteOnTheLog($\"Erro: { ex.Message}\", Utils.Util.Global.TipoLog.SIMPLES);");
+            builder.AppendLine("            }");
+            builder.AppendLine("            finally");
             builder.AppendLine("            {");
             builder.AppendLine("                Utils.DataBase.Connection.CloseConnection();");
             builder.AppendLine("            }");
@@ -68,7 +73,11 @@ namespace ClassCreate.Repository
             builder.AppendLine("                Utils.DataBase.Connection.OpenConection(ConfigurationManager.ConnectionStrings[\"LocalSqlServer\"].ConnectionString);");
             builder.AppendLine("                retorno = Entity.Models.$[NAMESPACE].$[CLASSEMODEL].Deleta($[CHAMADABUSCA]);");
             builder.AppendLine("            }");
-            builder.AppendLine("            catch");
+            builder.AppendLine("            catch (Exception ex)");
+            builder.AppendLine("            {");
+            builder.AppendLine("                Utils.Util.CL_Files.WriteOnTheLog($\"Erro: { ex.Message}\", Utils.Util.Global.TipoLog.SIMPLES);");
+            builder.AppendLine("            }");
+            builder.AppendLine("            finally");
             builder.AppendLine("            {");
             builder.AppendLine("                Utils.DataBase.Connection.CloseConnection();");
             builder.AppendLine("            }");
@@ -89,7 +98,11 @@ namespace ClassCreate.Repository
             builder.AppendLine("                Utils.DataBase.Connection.OpenConection(ConfigurationManager.ConnectionStrings[\"LocalSqlServer\"].ConnectionString);");
             builder.AppendLine("                retorno = Entity.Models.$[NAMESPACE].$[CLASSEMODEL].RetornaLista();");
             builder.AppendLine("            }");
-            builder.AppendLine("            catch");
+            builder.AppendLine("            catch (Exception ex)");
+            builder.AppendLine("            {");
+            builder.AppendLine("                Utils.Util.CL_Files.WriteOnTheLog($\"Erro: { ex.Message}\", Utils.Util.Global.TipoLog.SIMPLES);");
+            builder.AppendLine("            }");
+            builder.AppendLine("            finally");
             builder.AppendLine("            {");
             builder.AppendLine("                Utils.DataBase.Connection.CloseConnection();");
             builder.AppendLine("            }");
@@ -111,7 +124,11 @@ namespace ClassCreate.Repository
             builder.AppendLine("                Utils.DataBase.Connection.OpenConection(ConfigurationManager.ConnectionStrings[\"LocalSqlServer\"].ConnectionString);");
             builder.AppendLine("                retorno = Entity.Models.$[NAMESPACE].$[CLASSEMODEL].BuscaResultado($[CHAMADABUSCA]);");
             builder.AppendLine("            }");
-            builder.AppendLine("            catch");
+            builder.AppendLine("            catch (Exception ex)");
+            builder.AppendLine("            {");
+            builder.AppendLine("                Utils.Util.CL_Files.WriteOnTheLog($\"Erro: { ex.Message}\", Utils.Util.Global.TipoLog.SIMPLES);");
+            builder.AppendLine("            }");
+            builder.AppendLine("            finally");
             builder.AppendLine("            {");
             builder.AppendLine("                Utils.DataBase.Connection.CloseConnection();");
             builder.AppendLine("            }");
@@ -131,9 +148,13 @@ namespace ClassCreate.Repository
             builder.AppendLine("            try");
             builder.AppendLine("            {");
             builder.AppendLine("                Utils.DataBase.Connection.OpenConection(ConfigurationManager.ConnectionStrings[\"LocalSqlServer\"].ConnectionString);");
-            builder.AppendLine("                retorno = Entity.Models.$[NAMESPACE].$[CLASSEMODEL].InsereResultado($[ENTIDADEVARIAVEL]) ? $[ENTIDADEVARIAVEL] : null;");
+            builder.AppendLine("                retorno = Entity.Models.$[NAMESPACE].$[CLASSEMODEL].Insere($[ENTIDADEVARIAVEL]) ? $[ENTIDADEVARIAVEL] : null;");
             builder.AppendLine("            }");
-            builder.AppendLine("            catch");
+            builder.AppendLine("            catch (Exception ex)");
+            builder.AppendLine("            {");
+            builder.AppendLine("                Utils.Util.CL_Files.WriteOnTheLog($\"Erro: { ex.Message}\", Utils.Util.Global.TipoLog.SIMPLES);");
+            builder.AppendLine("            }");
+            builder.AppendLine("            finally");
             builder.AppendLine("            {");
             builder.AppendLine("                Utils.DataBase.Connection.CloseConnection();");
             builder.AppendLine("            }");

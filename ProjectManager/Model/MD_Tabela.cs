@@ -46,7 +46,7 @@ namespace Model
         public static List<MD_Tabela> GetTabelas(int projeto)
         {
             List<MD_Tabela> lista = new List<MD_Tabela>();
-            string sentenca = new DAO.MD_Tabela().table.CreateCommandSQLTable() + " WHERE PROJETO = " + projeto;
+            string sentenca = new DAO.MD_Tabela().table.CreateCommandSQLTable() + " WHERE PROJETO = " + projeto + " ORDER BY NOME";
 
             DbDataReader reader = DataBase.Connection.Select(sentenca);
             while (reader.Read())

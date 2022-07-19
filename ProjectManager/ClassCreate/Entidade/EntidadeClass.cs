@@ -27,7 +27,7 @@ namespace ClassCreate.Entidade
             builder.AppendLine("{");
             builder.AppendLine("    public class $[NOMECLASSE]");
             builder.AppendLine("    {");
-            builder.AppendLine("        $[PROPRIEDADES]");
+            builder.AppendLine("$[PROPRIEDADES]");
             builder.AppendLine("    }");
             builder.AppendLine("}");
 

@@ -34,33 +34,39 @@ namespace ClassCreate.Models
             {
                 if(i > 0)
                 {
-                    builder.Append("                    ");
+                    builder.Append("                ");
                 }
 
-                builder.Append($"dao.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = ");
 
                 switch (campo.TipoNucleo())
                 {
                     case Util.Enumerator.DataType.CHAR:
-                        builder.Append($"reader[{campo.DAO.Nome.ToUpper()}].ToString()");
+                        builder.Append($"dao.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = ");
+                        builder.Append($"reader[\"{campo.DAO.Nome.ToUpper()}\"].ToString()");
                         break;
                     case Util.Enumerator.DataType.STRING:
-                        builder.Append($"reader[{campo.DAO.Nome.ToUpper()}].ToString()");
+                        builder.Append($"dao.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = ");
+                        builder.Append($"reader[\"{campo.DAO.Nome.ToUpper()}\"].ToString()");
                         break;
                     case Util.Enumerator.DataType.INT:
-                        builder.Append($"int.Parse(reader[{campo.DAO.Nome.ToUpper()}].ToString())");
+                        builder.AppendLine();
+                        builder.AppendLine($"                int.TryParse(reader[\"{campo.DAO.Nome.ToUpper()}\"].ToString(), out var temp{i});");
+                        builder.Append($"                dao.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = temp{i}");
                         break;
                     case Util.Enumerator.DataType.DATE:
-                        builder.Append($"DateTime.Parse(reader[{campo.DAO.Nome.ToUpper()}].ToString())");
+                        builder.AppendLine();
+                        builder.AppendLine($"                DateTime.TryParse(reader[\"{campo.DAO.Nome.ToUpper()}\"].ToString(), out var temp{i});");
+                        builder.Append($"                dao.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = temp{i}");
                         break;
                     case Util.Enumerator.DataType.DECIMAL:
-                        builder.Append($"decimal.Parse(reader[{campo.DAO.Nome.ToUpper()}].ToString())");
+                        builder.AppendLine();
+                        builder.AppendLine($"                decimal.TryParse(reader[\"{campo.DAO.Nome.ToUpper()}\"].ToString(), out var temp{i});");
+                        builder.Append($"                dao.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = temp{i}");
                         break;
                 }
 
                 i++;
-                if (i < campos.Count) builder.AppendLine(",");
-                else builder.AppendLine();
+                builder.AppendLine(";");
             }
 
             return builder;

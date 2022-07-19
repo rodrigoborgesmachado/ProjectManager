@@ -98,7 +98,7 @@ namespace ClassCreate.Models
             builder.AppendLine("        {");
             builder.AppendLine("            Utils.Util.CL_Files.WriteOnTheLog(\"$[NOMECLASSE]().Atualiza()\", Utils.Util.Global.TipoLog.DETALHADO);");
             builder.AppendLine("");
-            builder.AppendLine("            $[NOMECLASSE] resultado = new $[NOMECLASSE](novo.Nome);");
+            builder.AppendLine("            $[NOMECLASSE] resultado = new $[NOMECLASSE]($[CONSTRUTORPARAMETROSPASSAGEMNOVO]);");
             builder.AppendLine("            resultado.baseDao = new Utils.DAO.$[NOMESPACEDAO].$[NOMECLASSE]()");
             builder.AppendLine("            {");
             builder.AppendLine("                $[ATRIBUICAOINSERCAO]");
@@ -150,7 +150,7 @@ namespace ClassCreate.Models
             builder.AppendLine("        {");
             builder.AppendLine("            Utils.Util.CL_Files.WriteOnTheLog(\"$[NOMECLASSE]().RetornaLista()\", Utils.Util.Global.TipoLog.DETALHADO);");
             builder.AppendLine("");
-            builder.AppendLine("            string sentenca = new Utils.DAO.TabuadaDivertida.MD_Resultados().table.CreateCommandSQLTable()");
+            builder.AppendLine("            string sentenca = new Utils.DAO.$[NOMESPACEDAO].$[NOMECLASSE]().table.CreateCommandSQLTable();");
             builder.AppendLine("");
             builder.AppendLine("            List<$[NOMEENTIDADE]> lista = new List<$[NOMEENTIDADE]>();");
             builder.AppendLine("            DbDataReader reader = Utils.DataBase.Connection.Select(sentenca);");
@@ -159,6 +159,7 @@ namespace ClassCreate.Models
             builder.AppendLine("            {");
             builder.AppendLine("                $[NOMEENTIDADE] dao = new $[NOMEENTIDADE]();");
             builder.AppendLine("                $[DAOTOENTIDADE]");
+            builder.AppendLine("                lista.Add(dao);");
             builder.AppendLine("            }");
             builder.AppendLine("            reader.Close();");
             builder.AppendLine("");
@@ -286,6 +287,12 @@ namespace ClassCreate.Models
 
             retorno.Add(new KeyWords()
             {
+                Parametro = "$[CONSTRUTORPARAMETROSPASSAGEMNOVO]",
+                Valor = this.CriarParametrosConstrutorNovoPassagem()
+            });
+
+            retorno.Add(new KeyWords()
+            {
                 Parametro = "$[ATRIBUICAOINSERCAO]",
                 Valor = this.CriarAtribuicaoCamposInsercao()
             });
@@ -331,6 +338,20 @@ namespace ClassCreate.Models
             string retorno = string.Empty;
 
             this.Tabela.CamposDaTabela().Where(c => c.DAO.PrimaryKey).ToList().ForEach(campo => retorno += ", " + this.RetornaNomeVariavel(campo.DAO.Nome));
+            retorno = retorno.Count() > 1 ? retorno.Substring(1).Trim() : string.Empty;
+
+            return retorno;
+        }
+
+        /// <summary>
+        /// Método que cria o nome dos parâmetros de passagem para o DAO
+        /// </summary>
+        /// <returns></returns>
+        private string CriarParametrosConstrutorNovoPassagem()
+        {
+            string retorno = string.Empty;
+
+            this.Tabela.CamposDaTabela().Where(c => c.DAO.PrimaryKey).ToList().ForEach(campo => retorno += ", novo." + this.RetornaNomePropriedade(campo.DAO.Nome));
             retorno = retorno.Count() > 1 ? retorno.Substring(1).Trim() : string.Empty;
 
             return retorno;

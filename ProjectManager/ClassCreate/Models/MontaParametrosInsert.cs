@@ -34,7 +34,7 @@ namespace ClassCreate.Models
             {
                 if(i > 0)
                 {
-                    builder.Append("                    ");
+                    builder.Append("                ");
                 }
 
                 builder.Append($"{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)} = novo.{this.daoClass.RetornaNomePropriedade(campo.DAO.Nome)}");
