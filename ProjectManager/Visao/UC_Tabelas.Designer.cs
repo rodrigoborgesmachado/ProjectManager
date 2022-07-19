@@ -34,12 +34,14 @@ namespace Visao
             this.pan_formularioGeral = new System.Windows.Forms.Panel();
             this.grb_tabela = new System.Windows.Forms.GroupBox();
             this.pan_colunas = new System.Windows.Forms.Panel();
+            this.btn_recarregar_campos = new System.Windows.Forms.Button();
             this.btn_visualizar_campo = new System.Windows.Forms.Button();
             this.btn_incluir_campo = new System.Windows.Forms.Button();
             this.btn_remover_campo = new System.Windows.Forms.Button();
             this.btn_editar_campo = new System.Windows.Forms.Button();
             this.dgv_colunas = new System.Windows.Forms.DataGridView();
             this.pan_tabelas = new System.Windows.Forms.Panel();
+            this.btn_recarregar_tabelas = new System.Windows.Forms.Button();
             this.btn_adicionar_tabela = new System.Windows.Forms.Button();
             this.dgv_tabelas = new System.Windows.Forms.DataGridView();
             this.btn_visualizar_tabela = new System.Windows.Forms.Button();
@@ -49,8 +51,7 @@ namespace Visao
             this.btn_gerar_classes = new System.Windows.Forms.Button();
             this.pan_botton = new System.Windows.Forms.Panel();
             this.pan_top = new System.Windows.Forms.Panel();
-            this.btn_recarregar_tabelas = new System.Windows.Forms.Button();
-            this.btn_recarregar_campos = new System.Windows.Forms.Button();
+            this.btn_gerar_classe_api = new System.Windows.Forms.Button();
             this.pan_tot.SuspendLayout();
             this.pan_formularioGeral.SuspendLayout();
             this.grb_tabela.SuspendLayout();
@@ -121,6 +122,18 @@ namespace Visao
             this.pan_colunas.Name = "pan_colunas";
             this.pan_colunas.Size = new System.Drawing.Size(355, 481);
             this.pan_colunas.TabIndex = 16;
+            // 
+            // btn_recarregar_campos
+            // 
+            this.btn_recarregar_campos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_recarregar_campos.BackgroundImage = global::Pj.Properties.Resources.loop_100px20x20;
+            this.btn_recarregar_campos.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btn_recarregar_campos.Location = new System.Drawing.Point(332, 109);
+            this.btn_recarregar_campos.Name = "btn_recarregar_campos";
+            this.btn_recarregar_campos.Size = new System.Drawing.Size(20, 20);
+            this.btn_recarregar_campos.TabIndex = 21;
+            this.btn_recarregar_campos.UseVisualStyleBackColor = true;
+            this.btn_recarregar_campos.Click += new System.EventHandler(this.btn_recarregar_campos_Click);
             // 
             // btn_visualizar_campo
             // 
@@ -205,6 +218,17 @@ namespace Visao
             this.pan_tabelas.Name = "pan_tabelas";
             this.pan_tabelas.Size = new System.Drawing.Size(379, 481);
             this.pan_tabelas.TabIndex = 15;
+            // 
+            // btn_recarregar_tabelas
+            // 
+            this.btn_recarregar_tabelas.BackgroundImage = global::Pj.Properties.Resources.loop_100px20x20;
+            this.btn_recarregar_tabelas.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btn_recarregar_tabelas.Location = new System.Drawing.Point(353, 108);
+            this.btn_recarregar_tabelas.Name = "btn_recarregar_tabelas";
+            this.btn_recarregar_tabelas.Size = new System.Drawing.Size(20, 20);
+            this.btn_recarregar_tabelas.TabIndex = 16;
+            this.btn_recarregar_tabelas.UseVisualStyleBackColor = true;
+            this.btn_recarregar_tabelas.Click += new System.EventHandler(this.btn_recarregar_tabelas_Click);
             // 
             // btn_adicionar_tabela
             // 
@@ -298,6 +322,7 @@ namespace Visao
             // 
             // pan_botton
             // 
+            this.pan_botton.Controls.Add(this.btn_gerar_classe_api);
             this.pan_botton.Controls.Add(this.btn_gerarScripts);
             this.pan_botton.Controls.Add(this.btn_gerar_classes);
             this.pan_botton.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -315,28 +340,17 @@ namespace Visao
             this.pan_top.Size = new System.Drawing.Size(740, 20);
             this.pan_top.TabIndex = 21;
             // 
-            // btn_recarregar_tabelas
+            // btn_gerar_classe_api
             // 
-            this.btn_recarregar_tabelas.BackgroundImage = global::Pj.Properties.Resources.loop_100px20x20;
-            this.btn_recarregar_tabelas.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btn_recarregar_tabelas.Location = new System.Drawing.Point(353, 108);
-            this.btn_recarregar_tabelas.Name = "btn_recarregar_tabelas";
-            this.btn_recarregar_tabelas.Size = new System.Drawing.Size(20, 20);
-            this.btn_recarregar_tabelas.TabIndex = 16;
-            this.btn_recarregar_tabelas.UseVisualStyleBackColor = true;
-            this.btn_recarregar_tabelas.Click += new System.EventHandler(this.btn_recarregar_tabelas_Click);
-            // 
-            // btn_recarregar_campos
-            // 
-            this.btn_recarregar_campos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_recarregar_campos.BackgroundImage = global::Pj.Properties.Resources.loop_100px20x20;
-            this.btn_recarregar_campos.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btn_recarregar_campos.Location = new System.Drawing.Point(332, 109);
-            this.btn_recarregar_campos.Name = "btn_recarregar_campos";
-            this.btn_recarregar_campos.Size = new System.Drawing.Size(20, 20);
-            this.btn_recarregar_campos.TabIndex = 21;
-            this.btn_recarregar_campos.UseVisualStyleBackColor = true;
-            this.btn_recarregar_campos.Click += new System.EventHandler(this.btn_recarregar_campos_Click);
+            this.btn_gerar_classe_api.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_gerar_classe_api.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btn_gerar_classe_api.Location = new System.Drawing.Point(339, 3);
+            this.btn_gerar_classe_api.Name = "btn_gerar_classe_api";
+            this.btn_gerar_classe_api.Size = new System.Drawing.Size(156, 29);
+            this.btn_gerar_classe_api.TabIndex = 11;
+            this.btn_gerar_classe_api.Text = "Gerar Classe API";
+            this.btn_gerar_classe_api.UseVisualStyleBackColor = true;
+            this.btn_gerar_classe_api.Click += new System.EventHandler(this.btn_gerar_classe_api_Click);
             // 
             // UC_Tabelas
             // 
@@ -387,5 +401,6 @@ namespace Visao
         private System.Windows.Forms.Button btn_visualizar_campo;
         private System.Windows.Forms.Button btn_recarregar_campos;
         private System.Windows.Forms.Button btn_recarregar_tabelas;
+        private System.Windows.Forms.Button btn_gerar_classe_api;
     }
 }

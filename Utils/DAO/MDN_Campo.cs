@@ -153,15 +153,15 @@ namespace DAO
                     break;
                 case DataType.DATE:
                     command_sql += " INTEGER ";
-                    command_sql += (notnull ? " DEFAULT " + DataBase.Connection.Date_to_Int(DateTime.Parse((this.ValueDefault == null ? 0.ToString() : this.ValueDefault.ToString()))) + " NOT NULL " : (unique ? "UNIQUE" : ""));
+                    command_sql += (notnull ? " DEFAULT " + DataBase.Connection.Date_to_Int(DateTime.Parse((this.ValueDefault == null || string.IsNullOrEmpty(this.ValueDefault.ToString()) ? 0.ToString() : this.ValueDefault.ToString()))) + " NOT NULL " : (unique ? "UNIQUE" : ""));
                     break;
                 case DataType.DECIMAL:
                     command_sql += " DECIMAL(" + this.size + "," + precision + ") ";
-                    command_sql += (notnull ? " DEFAULT " + decimal.Parse((this.ValueDefault == null ? 0.ToString() : this.ValueDefault.ToString())) + " NOT NULL " : (unique ? " UNIQUE " : ""));
+                    command_sql += (notnull ? " DEFAULT " + decimal.Parse((this.ValueDefault == null || string.IsNullOrEmpty(this.ValueDefault.ToString()) ? 0.ToString() : this.ValueDefault.ToString())) + " NOT NULL " : (unique ? " UNIQUE " : ""));
                     break;
                 case DataType.INT:
                     command_sql += " INTEGER ";
-                    command_sql += (notnull ? " DEFAULT " + int.Parse((this.ValueDefault == null ? 0.ToString() : (string.IsNullOrEmpty(this.ValueDefault.ToString()) ? 0.ToString() : this.ValueDefault.ToString()))) + " NOT NULL " : (unique ? " UNIQUE " : ""));
+                    command_sql += (notnull ? " DEFAULT " + int.Parse((this.ValueDefault == null || string.IsNullOrEmpty(this.ValueDefault.ToString()) ? 0.ToString() : (string.IsNullOrEmpty(this.ValueDefault.ToString()) ? 0.ToString() : this.ValueDefault.ToString()))) + " NOT NULL " : (unique ? " UNIQUE " : ""));
                     break;
                 case DataType.STRING:
                     command_sql += " VARCHAR(" + this.size + ") ";

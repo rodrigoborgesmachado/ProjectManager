@@ -102,6 +102,25 @@ namespace Model
             return retorno;
         }
 
+        /// <summary>
+        /// Método que monta o data table 
+        /// </summary>
+        /// <param name="tabela">Tabela para montar a tabela do núcleo</param>
+        /// <returns>Objeto da tabela do núcleo</returns>
+        public static DAO.MDN_Table MontaTable(Model.MD_Tabela tabela)
+        {
+            Util.CL_Files.WriteOnTheLog("ClassCreater.MontaTable()", Util.Global.TipoLog.DETALHADO);
+
+            DAO.MDN_Table table = new DAO.MDN_Table(tabela.DAO.Nome);
+
+            foreach (Model.MD_Campos campo in tabela.CamposDaTabela())
+            {
+                table.Fields_Table.Add(new DAO.MDN_Campo(campo.DAO.Nome, campo.DAO.NotNull, campo.TipoNucleo(), campo.DAO.Default, campo.DAO.PrimaryKey, campo.DAO.Unique, campo.DAO.Tamanho, int.Parse(campo.DAO.Precisao.ToString())));
+            }
+
+            return table;
+        }
+
         #endregion Métodos
     }
 }

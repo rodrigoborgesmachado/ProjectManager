@@ -57,6 +57,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassCreate\Controller\ControllerClass.cs" />
+    <Compile Include="ClassCreate\CriarClasses.cs" />
+    <Compile Include="ClassCreate\DAO\AtributosPropriedades.cs" />
+    <Compile Include="ClassCreate\DAO\CamposConstrutorClasse.cs" />
+    <Compile Include="ClassCreate\DAO\CamposInsert.cs" />
+    <Compile Include="ClassCreate\DAO\CamposLoad.cs" />
+    <Compile Include="ClassCreate\DAO\CamposUpdate.cs" />
+    <Compile Include="ClassCreate\DAO\Construtor.cs" />
+    <Compile Include="ClassCreate\DAO\DAOClass.cs" />
+    <Compile Include="ClassCreate\BaseClass.cs" />
+    <Compile Include="ClassCreate\DAO\WhereChavesPrimarias.cs" />
+    <Compile Include="ClassCreate\Entidade\EntidadeClass.cs" />
+    <Compile Include="ClassCreate\Entidade\MontaPropriedades.cs" />
+    <Compile Include="ClassCreate\InterfaceRepository\InterfaceRepositoryClass.cs" />
+    <Compile Include="ClassCreate\KeyWords.cs" />
+    <Compile Include="ClassCreate\Models\ModelClass.cs" />
+    <Compile Include="ClassCreate\Models\MontaDeDAOParaEntidade.cs" />
+    <Compile Include="ClassCreate\Models\MontaDeEntidadeParaDAO.cs" />
+    <Compile Include="ClassCreate\Models\MontaParametrosInsert.cs" />
+    <Compile Include="ClassCreate\Repository\RepositoryClass.cs" />
     <Compile Include="Model\Campo.cs" />
     <Compile Include="Model\MD_Ambientes.cs" />
     <Compile Include="Model\MD_Campos.cs" />
@@ -463,6 +483,7 @@
     <None Include="Resources\project200x200.png" />
     <None Include="Resources\project20x20.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

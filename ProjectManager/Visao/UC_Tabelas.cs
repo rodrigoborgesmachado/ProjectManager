@@ -311,6 +311,28 @@ namespace Visao
             this.FillGridTabela();
         }
 
+        /// <summary>
+        /// Evento lançado no clique da opção de gerar classe de api
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_gerar_classe_api_Click(object sender, EventArgs e)
+        {
+            if(this.dgv_tabelas.SelectedRows.Count == 0)
+            {
+                Message.MensagemAlerta("Selecione uma tabela no grid");
+                return;
+            }
+
+            Model.MD_Tabela tabela = this.tabelas[this.dgv_tabelas.SelectedRows[0].Index];
+            string mensagem = string.Empty;
+
+            if(!this.principal.GerarClasseApi(tabela, ref mensagem))
+            {
+                Message.MensagemAlerta("Erro ao gerar tabela " + tabela.DAO.Nome + Environment.NewLine + "Erro: " + mensagem);
+            }
+        }
+
         #endregion Eventos
 
         #region Construtores

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Windows.Forms;
+using ClassCreate;
 using static Util.Enumerator;
 using static Util.Global;
 
@@ -285,6 +286,22 @@ namespace Visao
 
             Model.MD_Projeto projeto = new Model.MD_Projeto(int.Parse(codigo));
             this.GerarClasses(projeto);
+        }
+
+        /// <summary>
+        /// Evento lançado na seleção do botão direito no tree view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void item_gerarClasses_api_selected_Click(object sender, EventArgs e)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.item_gerarClasses_api_selected_Click()", Util.Global.TipoLog.DETALHADO);
+
+            MenuItem item = (MenuItem)sender;
+            string codigo = item.Tag.ToString();
+
+            Model.MD_Projeto projeto = new Model.MD_Projeto(int.Parse(codigo));
+            this.GerarClassesAPI(projeto);
         }
 
         /// <summary>
@@ -1271,6 +1288,9 @@ namespace Visao
                 MenuItem item_gerarclasses = new MenuItem("Gerar Classes", item_gerarClasses_selected_Click);
                 item_gerarclasses.Tag = project.DAO.Codigo;
 
+                MenuItem item_gerarclasses_API = new MenuItem("Gerar Classes - API", item_gerarClasses_api_selected_Click);
+                item_gerarclasses_API.Tag = project.DAO.Codigo;
+
                 MenuItem item_gerarRelModulos = new MenuItem("Gerar Relatório de Módulos", item_gerarRelatorioTodosModulo_selected_Click);
                 item_gerarRelModulos.Tag = project.DAO.Codigo;
 
@@ -1283,6 +1303,7 @@ namespace Visao
                 menu.MenuItems.Add(item_editar);
                 menu.MenuItems.Add(item_excluir);
                 menu.MenuItems.Add(item_gerarclasses);
+                menu.MenuItems.Add(item_gerarclasses_API);
                 menu.MenuItems.Add(item_gerarDER);
                 menu.MenuItems.Add(item_gerarScript);
                 menu.MenuItems.Add(item_gerarRelModulos);
@@ -1628,152 +1649,6 @@ namespace Visao
 
             menuCenario.MenuItems.Add(item_BaixarInstalador);
 
-            nodeTabela.ContextMenu = menuCenario;
-        }
-
-        /// <summary>
-        /// Método que adiciona o menu à tabela
-        /// </summary>
-        /// <param name="nodeTabela">Node referente à tabela</param>
-        private void IncluiMenuTabela(ref TreeNode nodeTabela, Model.MD_Tabela tabela, Model.MD_Projeto projeto)
-        {
-            Util.CL_Files.WriteOnTheLog("FO_Principal.IncluiMenuTabela()", Util.Global.TipoLog.DETALHADO);
-
-            MenuItem item_editar_tabela = new MenuItem("Editar", item_editar_tabela_selected_Click);
-            item_editar_tabela.Tag = tabela.DAO.Codigo + ":" + projeto.DAO.Codigo;
-
-            MenuItem item_excluir_tabela = new MenuItem("Excluir", item_excluir_tabela_selected_Click);
-            item_excluir_tabela.Tag = tabela.DAO.Codigo + ":" + projeto.DAO.Codigo;
-
-            MenuItem item_adicionarCampo_tabela = new MenuItem("Adicionar Campo", item_adicionaCampo_tabela_selected_Click);
-            item_adicionarCampo_tabela.Tag = tabela.DAO.Codigo + ":" + projeto.DAO.Codigo;
-
-            MenuItem item_gerarclasse = new MenuItem("Gerar Classe", item_gerarClasse_selected_Click);
-            item_gerarclasse.Tag = tabela.DAO.Codigo + ":" + projeto.DAO.Codigo;
-
-            MenuItem item_gerarScript = new MenuItem("Gerar Script", item_gerarScriptTabela_selected_Click);
-            item_gerarScript.Tag = tabela.DAO.Codigo + ":" + projeto.DAO.Codigo;
-
-            ContextMenu menuCenario = new ContextMenu();
-
-            menuCenario.MenuItems.Add(item_adicionarCampo_tabela);
-            menuCenario.MenuItems.Add(item_editar_tabela);
-            menuCenario.MenuItems.Add(item_excluir_tabela);
-            menuCenario.MenuItems.Add(item_gerarclasse);
-            menuCenario.MenuItems.Add(item_gerarScript);
-
-            nodeTabela.ContextMenu = menuCenario;
-        }
-
-        /// <summary>
-        /// Método que carrega os campos da tabela
-        /// </summary>
-        /// <param name="tabela">Tabela para buscar os campos</param>
-        /// <param name="node">Node para adicionar os campos</param>
-        public void CarregaCampos(Model.MD_Tabela tabela, ref TreeNode node, ref BarraDeCarregamento aguarde)
-        {
-            Util.CL_Files.WriteOnTheLog("FO_Principal.CarregaCampos()", Util.Global.TipoLog.DETALHADO);
-
-            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Campos().table.CreateCommandSQLTable() + " WHERE CODIGOTABELA = " + tabela.DAO.Codigo + " ORDER BY NOME");
-
-            while (reader.Read())
-            {
-                aguarde.AvancaBarra(1);
-                Model.MD_Campos campo = new Model.MD_Campos(int.Parse(reader["CODIGO"].ToString()), tabela.DAO.Codigo, tabela.DAO.Projeto.Codigo);
-
-                if (tabela.DAO.Codigo != campo.DAO.Tabela.Codigo)
-                    continue;
-
-                TreeNode nodeCampo = new TreeNode(campo.DAO.Nome);
-                nodeCampo.Tag = "campos:" + campo.DAO.Codigo + ":" + tabela.DAO.Codigo + ":" + tabela.DAO.Projeto.Codigo;
-                nodeCampo.ImageIndex = 2;
-                nodeCampo.SelectedImageIndex = 2;
-
-                this.CarregaRelacoes(campo, ref nodeCampo, ref aguarde);
-                this.IncluiMenuCampo(ref nodeCampo, campo);
-
-                node.Nodes.Add(nodeCampo);
-            }
-
-            reader.Close();
-        }
-
-        /// <summary>
-        /// Método que adiciona o menu ao campo
-        /// </summary>
-        /// <param name="nodeTabela">Node referente ao campo</param>
-        private void IncluiMenuCampo(ref TreeNode nodeTabela, Model.MD_Campos campo)
-        {
-            Util.CL_Files.WriteOnTheLog("FO_Principal.IncluiMenuCampo()", Util.Global.TipoLog.DETALHADO);
-
-            MenuItem item_editar_tabela = new MenuItem("Editar", item_editar_campo_selected_Click);
-            item_editar_tabela.Tag = campo.DAO.Codigo + ":" + campo.DAO.Tabela.Codigo + ":" + campo.DAO.Projeto.Codigo;
-
-            MenuItem item_excluir_tabela = new MenuItem("Excluir", item_excluir_campo_selected_Click);
-            item_excluir_tabela.Tag = campo.DAO.Codigo + ":" + campo.DAO.Tabela.Codigo + ":" + campo.DAO.Projeto.Codigo;
-
-            MenuItem item_incluirRelacao_tabela = new MenuItem("Incluir relacionamento", item_incluirRelacionamento_campo_selected_Click);
-            item_incluirRelacao_tabela.Tag = campo.DAO.Codigo + ":" + campo.DAO.Tabela.Codigo + ":" + campo.DAO.Projeto.Codigo;
-
-            ContextMenu menuCenario = new ContextMenu();
-            menuCenario.MenuItems.Add(item_editar_tabela);
-            menuCenario.MenuItems.Add(item_excluir_tabela);
-            menuCenario.MenuItems.Add(item_incluirRelacao_tabela);
-            nodeTabela.ContextMenu = menuCenario;
-        }
-
-        /// <summary>
-        /// Método que carrega as relações do campo
-        /// </summary>
-        /// <param name="campo">Campo para buscar as relações</param>
-        /// <param name="node">node para preencher as relações</param>
-        public void CarregaRelacoes(Model.MD_Campos campo, ref TreeNode node, ref BarraDeCarregamento aguarde)
-        {
-            Util.CL_Files.WriteOnTheLog("FO_Principal.CarregaRelacoes()", Util.Global.TipoLog.DETALHADO);
-
-            DbDataReader reader = DataBase.Connection.Select(new DAO.MD_Relacao().table.CreateCommandSQLTable() + " WHERE CAMPOORIGEM = " + campo.DAO.Codigo + " ORDER BY FOREINGKEY");
-
-            while (reader.Read())
-            {
-                aguarde.AvancaBarra(1);
-                Model.MD_Tabela tabelaDestino = new Model.MD_Tabela(int.Parse(reader["TABELADESTINO"].ToString()), campo.DAO.Projeto.Codigo);
-                Model.MD_Campos campoDestino = new Model.MD_Campos(int.Parse(reader["CAMPODESTINO"].ToString()), tabelaDestino.DAO.Codigo, tabelaDestino.DAO.Projeto.Codigo);
-
-                Model.MD_Relacao relacao = new Model.MD_Relacao(int.Parse(reader["CODIGO"].ToString()), campo.DAO.Projeto, campo.DAO.Tabela, tabelaDestino.DAO, campo.DAO, campoDestino.DAO);
-
-                if (campo.DAO.Codigo != relacao.DAO.CampoOrigem.Codigo)
-                    continue;
-
-                TreeNode nodeRelacao = new TreeNode(string.IsNullOrEmpty(relacao.DAO.NomeForeingKey) ? campo.DAO.Nome : relacao.DAO.NomeForeingKey);
-                nodeRelacao.Tag = "relacoes:" + relacao.DAO.Codigo + ":" + campo.DAO.Codigo + ":" + campoDestino.DAO.Codigo + ":" + campo.DAO.Tabela.Codigo + ":" + tabelaDestino.DAO.Codigo + ":" + campo.DAO.Projeto.Codigo;
-                nodeRelacao.ImageIndex = 3;
-                nodeRelacao.SelectedImageIndex = 3;
-
-                this.IncluiMenuRelacao(ref nodeRelacao, relacao);
-
-                node.Nodes.Add(nodeRelacao);
-            }
-
-            reader.Close();
-        }
-
-        /// <summary>
-        /// Método que adiciona o menu ao campo
-        /// </summary>
-        /// <param name="nodeTabela">Node referente ao campo</param>
-        private void IncluiMenuRelacao(ref TreeNode nodeTabela, Model.MD_Relacao relacao)
-        {
-            Util.CL_Files.WriteOnTheLog("FO_Principal.IncluiMenuRelacao()", Util.Global.TipoLog.DETALHADO);
-
-            MenuItem item_editar_relacao = new MenuItem("Editar", item_editar_relacao_selected_Click);
-            item_editar_relacao.Tag = relacao.DAO.Codigo + ":" + relacao.DAO.CampoOrigem.Codigo + ":" + relacao.DAO.CampoDestino.Codigo + ":" + relacao.DAO.CampoOrigem.Tabela.Codigo + ":" + relacao.DAO.TabelaDestino.Codigo + ":" + relacao.DAO.Projeto.Codigo;
-
-            MenuItem item_excluir_relacao = new MenuItem("Excluir", item_excluir_relacao_selected_Click);
-            item_excluir_relacao.Tag = relacao.DAO.Codigo + ":" + relacao.DAO.CampoOrigem.Codigo + ":" + relacao.DAO.CampoDestino.Codigo + ":" + relacao.DAO.CampoOrigem.Tabela.Codigo + ":" + relacao.DAO.TabelaDestino.Codigo + ":" + relacao.DAO.Projeto.Codigo;
-
-            ContextMenu menuCenario = new ContextMenu();
-            menuCenario.MenuItems.Add(item_editar_relacao);
-            menuCenario.MenuItems.Add(item_excluir_relacao);
             nodeTabela.ContextMenu = menuCenario;
         }
 
@@ -2233,6 +2108,40 @@ namespace Visao
         }
 
         /// <summary>
+        /// Método que gera as classes de um projeto
+        /// </summary>
+        /// <param name="projeto"></param>
+        public void GerarClassesAPI(Model.MD_Projeto projeto)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.GerarClassesAPI()", Util.Global.TipoLog.DETALHADO);
+
+            string mensagemErro = string.Empty;
+            bool houveErro = false;
+            List<string> errors = new List<string>();
+            List<Model.MD_Tabela> tabelas = projeto.GetTabelasProjeto();
+
+            BarraDeCarregamento barra = new BarraDeCarregamento(tabelas.Count, "Criando classes");
+            barra.Show();
+
+            foreach (Model.MD_Tabela t in tabelas)
+            {
+                if (!this.GerarClasseApi(t, ref mensagemErro))
+                {
+                    errors.Add($"Erro ao gerar classe {t.DAO.Nome}");
+                    houveErro = true;
+                }
+                barra.AvancaBarra(1);
+            }
+
+            barra.Dispose();
+
+            if (houveErro)
+                Message.MensagemErro($"Houve erros:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+            else
+                Message.MensagemSucesso("Classes geradas no caminho: " + Util.Global.app_classes_api_directory);
+        }
+
+        /// <summary>
         /// Método que gera a classe da tabela passada por parâmetro
         /// </summary>
         /// <param name="tabela">Tabela a se gerar a classe</param>
@@ -2242,8 +2151,21 @@ namespace Visao
         {
             Util.CL_Files.WriteOnTheLog("FO_Principal.GerarClasse()", Util.Global.TipoLog.DETALHADO);
 
-            DAO.MDN_Table table = Regras.ClassCreater.MontaTable(tabela);
-            return Regras.ClassCreater.Create(table, ref mensagem);
+            DAO.MDN_Table table = Model.MD_Tabela.MontaTable(tabela);
+            return Regras.ClassCreater.Create(table, tabela.DAO.Projeto, ref mensagem);
+        }
+
+        /// <summary>
+        /// Método que gera a classe da tabela passada por parâmetro
+        /// </summary>
+        /// <param name="tabela">Tabela a se gerar a classe</param>
+        /// <param name="mensagem">mensagem caso tenha erro</param>
+        /// <returns>True - sucesso; False - erro</returns>
+        public bool GerarClasseApi(Model.MD_Tabela tabela, ref string mensagem)
+        {
+            Util.CL_Files.WriteOnTheLog("FO_Principal.GerarClasseApi()", Util.Global.TipoLog.DETALHADO);
+
+            return CriarClasses.Criar(tabela, out mensagem);
         }
 
         /// <summary>

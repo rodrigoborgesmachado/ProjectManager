@@ -133,6 +133,10 @@ namespace Model
             {
                 data = Util.Enumerator.DataType.CHAR;
             }
+            else if (this.DAO.TipoCampo.Nome.ToUpper().Contains("DATE"))
+            {
+                data = Util.Enumerator.DataType.DATE;
+            }
             else
             {
                 data = Util.Enumerator.DataType.STRING;

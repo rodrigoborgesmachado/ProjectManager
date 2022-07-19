@@ -14,39 +14,19 @@ namespace Regras
     /// </summary>
     public static class ClassCreater
     {
-
-        /// <summary>
-        /// Método que monta o data table 
-        /// </summary>
-        /// <param name="tabela">Tabela para montar a tabela do núcleo</param>
-        /// <returns>Objeto da tabela do núcleo</returns>
-        public static MDN_Table MontaTable(Model.MD_Tabela tabela)
-        {
-            Util.CL_Files.WriteOnTheLog("ClassCreater.MontaTable()", Util.Global.TipoLog.DETALHADO);
-
-            MDN_Table table = new MDN_Table(tabela.DAO.Nome);
-
-            foreach(Model.MD_Campos campo in tabela.CamposDaTabela())
-            {
-                table.Fields_Table.Add(new MDN_Campo(campo.DAO.Nome, campo.DAO.NotNull, campo.TipoNucleo(), campo.DAO.Default, campo.DAO.PrimaryKey, campo.DAO.Unique, campo.DAO.Tamanho, int.Parse(campo.DAO.Precisao.ToString())));
-            }
-
-            return table;
-        }
-
         /// <summary>
         /// Método que gera a classe da tabela passada em referência
         /// </summary>
         /// <param name="tabela">tabela a ser criada a classe</param>
         /// <param name="mensagemErro">string de referência para descrição de erros</param>
         /// <returns>True - Criado sem erros; False - Erro ao criar</returns>
-        public static bool Create(MDN_Table tabela, ref string mensagemErro)
+        public static bool Create(MDN_Table tabela, MD_Projeto projeto, ref string mensagemErro)
         {
             Util.CL_Files.WriteOnTheLog("ClassCreater.Create()", Util.Global.TipoLog.DETALHADO);
 
             try
             {
-                MontaDAO(tabela, ref mensagemErro);
+                MontaDAO(tabela, projeto, ref mensagemErro);
 
                 MontaModel(tabela, ref mensagemErro);
             }
@@ -57,6 +37,27 @@ namespace Regras
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Método que monta as classes DAO
+        /// </summary>
+        private static void MontaDAO(MDN_Table tabela, MD_Projeto projeto, ref string mensagemErro)
+        {
+            StringBuilder classe = new StringBuilder();
+
+            MontarTextoInicialClasseDAO(ref classe, projeto);
+
+            StringBuilder atributos = new StringBuilder();
+            MontarAtibutosDAO(ref atributos, tabela);
+
+            StringBuilder construtores = new StringBuilder();
+            MontarConstrutoresDAO(ref construtores, tabela);
+
+            StringBuilder metodos = new StringBuilder();
+            MontarMetodosDAO(ref metodos, tabela);
+
+            MontaArquivoDAO(tabela, ref classe, ref atributos, ref construtores, ref metodos);
         }
 
         /// <summary>
@@ -77,27 +78,6 @@ namespace Regras
             MontarConstrutoresModel(ref construtores, tabela);
 
             MontaArquivoModel(tabela, ref classe, ref atributos, ref construtores);
-        }
-
-        /// <summary>
-        /// Método que monta as classes DAO
-        /// </summary>
-        private static void MontaDAO(MDN_Table tabela, ref string mensagemErro)
-        {
-            StringBuilder classe = new StringBuilder();
-
-            MontarTextoInicialClasseDAO(ref classe);
-
-            StringBuilder atributos = new StringBuilder();
-            MontarAtibutosDAO(ref atributos, tabela);
-
-            StringBuilder construtores = new StringBuilder();
-            MontarConstrutoresDAO(ref construtores, tabela);
-
-            StringBuilder metodos = new StringBuilder();
-            MontarMetodosDAO(ref metodos, tabela);
-
-            MontaArquivoDAO(tabela, ref classe, ref atributos, ref construtores, ref metodos);
         }
 
         /// <summary>
@@ -218,19 +198,18 @@ namespace Regras
         /// Método que monta o texto inicial da classe
         /// </summary>
         /// <param name="builder"></param>
-        private static void MontarTextoInicialClasseDAO(ref StringBuilder builder)
+        private static void MontarTextoInicialClasseDAO(ref StringBuilder builder, MD_Projeto projeto)
         {
             Util.CL_Files.WriteOnTheLog("ClassCreater.MontarTextoInicialClasse()", Util.Global.TipoLog.DETALHADO);
-
+            
             builder.AppendLine("using System;");
             builder.AppendLine("using System.Collections.Generic;");
-            builder.AppendLine("using System.Data.SQLite;");
             builder.AppendLine("using System.Linq;");
             builder.AppendLine("using System.Text;");
             builder.AppendLine("using System.Threading.Tasks;");
             builder.AppendLine("using System.Data.Common;");
             builder.AppendLine("");
-            builder.AppendLine("namespace DAO");
+            builder.AppendLine($"namespace DAO.{projeto.Descricao}");
             builder.AppendLine("{");
             builder.AppendLine("");
             builder.AppendLine("    /// <summary>");
@@ -617,7 +596,7 @@ namespace Regras
         }
 
         /// <summary>
-        /// Método que preenche o método DELETE
+        /// Método que preenche o método INSERT
         /// </summary>
         /// <param name="builder">string para construção do método</param>
         /// <param name="table">Tabela para criar o delete</param>
