@@ -14,6 +14,7 @@ namespace Utils
         [STAThread]
         static void Main()
         {
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JSON;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
@@ -122,6 +123,8 @@ namespace Util
 
         // Nome da classe de MDN_Campo
         public static string app_claseMDNCampo_file = "MDN_Campo.cs";
+
+        public static JS_Usuario usuarioLogado = new JS_Usuario();
 
         /// <summary>
         /// Enumerador referente ao tipo de log que o sistema irá persistir

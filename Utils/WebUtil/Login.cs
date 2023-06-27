@@ -1,11 +1,8 @@
 ﻿using JSON;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Util.WebUtil
@@ -18,47 +15,50 @@ namespace Util.WebUtil
         /// <param name="login"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public static bool ValidaLogin(string login, string pass)
+        public static async Task<bool> ValidaLoginAsync(string login, string pass)
         {
-            bool retorno = true;
+            JS_RetornoLogin retorno = new JS_RetornoLogin();
 
             try
             {
-                string dadosPOST = "usu=" + login +
-                                   "&pass=" + pass;
+                var url = "https://apisunsale.azurewebsites.net/api/Token/crudforms";
+                var json = JsonConvert.SerializeObject(new { userName = login, password = pass });
 
-                var dados = Encoding.UTF8.GetBytes(dadosPOST);
 
-                var requisicaoWeb = WebRequest.CreateHttp("http://www.sunsalesystem.com.br/php/login.php");
-                requisicaoWeb.Method = "POST";
-                requisicaoWeb.ContentType = "application/x-www-form-urlencoded";
-                requisicaoWeb.ContentLength = dados.Length;
-                requisicaoWeb.UserAgent = "RequisicaoDevTools";
+                var request = WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
 
-                using (var stream = requisicaoWeb.GetRequestStream())
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    stream.Write(dados, 0, dados.Length);
-                    stream.Close();
+                    streamWriter.Write(json);
                 }
 
-                using (var resposta = requisicaoWeb.GetResponse())
+                var response = request.GetResponse();
+                using (var streamReader = new StreamReader(response.GetResponseStream()))
                 {
-                    var streamDados = resposta.GetResponseStream();
-                    StreamReader reader = new StreamReader(streamDados);
-                    object objResponse = reader.ReadToEnd();
-                    retorno = JsonConvert.DeserializeObject<List<JS_Cliente>>(objResponse.ToString()).Count > 0 ;
-                    streamDados.Close();
-                    resposta.Close();
-                }
+                    string result = streamReader.ReadToEnd();
 
+                    retorno = JsonConvert.DeserializeObject<JS_RetornoLogin>(result);
+
+                    Util.Global.usuarioLogado = new JS_Usuario()
+                    {
+                        ADMINISTRADOR = retorno.Admin,
+                        CODIGO = retorno.Id,
+                        DESENVOLVEDOR = retorno.Admin,
+                        EMAIL = retorno.Username,
+                        LASTVERSION = retorno.CrudVersao,
+                        TOKEN = retorno.token
+                    };
+                }
             }
             catch (Exception e)
             {
-                Util.CL_Files.WriteOnTheLog("Erro: " + e.Message, Global.TipoLog.SIMPLES);
-                retorno = false;
+                Util.CL_Files.LogException(e);
+                return false;
             }
 
-            return retorno;
+            return retorno != null;
         }
     }
 }

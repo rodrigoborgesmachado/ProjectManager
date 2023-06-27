@@ -97,6 +97,7 @@
     <Compile Include="JSON\JS_CodigoSuporte.cs" />
     <Compile Include="JSON\JS_Licenca.cs" />
     <Compile Include="JSON\JS_Resposta.cs" />
+    <Compile Include="JSON\JS_RetornoLogin.cs" />
     <Compile Include="JSON\JS_Usuario.cs" />
     <Compile Include="JSON\WebResult.cs" />
     <Compile Include="Program.cs" />
