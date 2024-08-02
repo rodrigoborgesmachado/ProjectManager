@@ -1,10 +1,15 @@
-# Project Manager
+# ProjectManager
 
-**Sistema para controle de desenvolvimento de outros projetos**
+ProjectManager é uma aplicação desktop projetada para auxiliar no gerenciamento de projetos, oferecendo funcionalidades para criar relatórios de testes, relatórios de especificações técnicas e Diagramas de Relacionamento de Entidade (DER) para modelos de relacionamento de dados.
 
-## Considerações Gerais
+## Funcionalidades
 
-* Sistema desenvolvido com Dotnet Framework - Windows Forms
-* Possibilita o cadastro de tabelas e gera DER, além de classes de comunicação com o Banco de Dados
-* Possibilita geração de relatórios de módulos de sistema e de testes
-* Possibilita cadastro de ambientes para controle de publicação e manutenção
+- **Gerenciamento de Projetos:** Crie, edite e organize seus projetos de forma eficiente.
+- **Relatórios de Testes:** Gere relatórios detalhados sobre testes realizados, facilitando a análise de qualidade.
+- **Relatórios de Especificações Técnicas:** Documente especificações técnicas para uma melhor comunicação entre equipes.
+- **DER (Diagrama de Relacionamento de Entidade):** Visualize e crie diagramas para modelar o relacionamento entre dados.
+
+## Tecnologias Utilizadas
+
+- **Plataforma:** Aplicação desktop
+- **Desenvolvimento:** .NET Framework 4.8
